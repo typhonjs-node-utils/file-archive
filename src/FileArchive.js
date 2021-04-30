@@ -198,7 +198,7 @@ export default class FileArchive
                instance.archive.append(fs.createReadStream(result.resolvedPath), { name: result.filepath });
 
                // Remove temporary archive.
-               fs.removeSync(result.resolvedPath);
+               // fs.removeSync(result.resolvedPath);
             }
          });
 
