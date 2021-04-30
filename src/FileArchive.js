@@ -140,7 +140,7 @@ export default class FileArchive
          stream,
          addToParent,
          childPromises: [],
-         tempFiles: []
+         tempArchives: []
       };
 
       this.#archiverStack.push(instance);
@@ -198,7 +198,8 @@ export default class FileArchive
                // Append temporary archive to requested relative filepath.
                instance.archive.append(fs.createReadStream(result.resolvedPath), { name: result.filepath });
 
-               instance.tempFiles.push(result.resolvedPath);
+               // Track temporary archive to remove it when the archive instance is closed.
+               instance.tempArchives.push(result.resolvedPath);
             }
          });
 
@@ -208,10 +209,10 @@ export default class FileArchive
             // Add event callbacks to instance stream such that on close the Promise is resolved.
             instance.stream.on('close', () =>
             {
-               for (const temp of instance.tempFiles)
+               // Remove any temporary archives.
+               for (const tempArchive of instance.tempArchives)
                {
-                  // Remove temporary archive.
-                  fs.removeSync(temp);
+                  fs.removeSync(tempArchive);
                }
 
                resolve();
