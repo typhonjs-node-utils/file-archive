@@ -160,11 +160,11 @@ export default class FileArchive
    {
       if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
 
-      const instance = this.#popArchive();
+      const instance = this._popArchive();
 
       if (instance !== null)
       {
-         const parentInstance = this.#getArchive();
+         const parentInstance = this._getArchive();
 
          // If `addToParent` is true and there is a parent instance then push a new Promise into the parents
          // `childPromises` array and add callbacks to the current instances file stream to resolve the Promise.
@@ -254,7 +254,7 @@ export default class FileArchive
          this._eventbus.trigger(this.#options.logEvent, `${logPrepend}copied: ${dest}`);
       }
 
-      const instance = this.#getArchive();
+      const instance = this._getArchive();
 
       if (instance !== null)
       {
@@ -323,7 +323,7 @@ export default class FileArchive
     *
     * @returns {*}
     */
-   #getArchive()
+   _getArchive()
    {
       return this.#archiverStack.length > 0 ? this.#archiverStack[this.#archiverStack.length - 1] : null;
    }
@@ -343,7 +343,7 @@ export default class FileArchive
     *
     * @returns {*}
     */
-   #popArchive()
+   _popArchive()
    {
       return this.#archiverStack.length > 0 ? this.#archiverStack.pop() : null;
    }
@@ -400,7 +400,7 @@ export default class FileArchive
          this._eventbus.trigger(this.#options.logEvent, `${logPrepend}output: ${filepath}`);
       }
 
-      const instance = this.#getArchive();
+      const instance = this._getArchive();
 
       if (instance !== null)
       {
