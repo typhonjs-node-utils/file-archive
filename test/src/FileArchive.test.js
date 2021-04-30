@@ -1,16 +1,15 @@
-import { assert }    from 'chai';
-import fs            from 'fs-extra';
+import { assert }       from 'chai';
+import fs               from 'fs-extra';
 
-import FileArchive   from '../../src/FileArchive.js';
+import { FileArchive }  from '../../src/index.js';
 
 const fileArchive = new FileArchive({ relativePath: './test/fixture' });
 
 // Empty test fixture directory.
 fs.emptydirSync('./test/fixture');
 
-// Note: to prevent `./test/fixture` from being emptied at the end of testing comment out the last test
+// Note: to prevent `./test/fixture` from being emptied at the end of testing comment out the last test.
 // `emptyRelativePath`.
-//   writeFile({ data, filepath, silent = false, encoding = 'utf8' } = {})
 
 describe('FileArchive:', () =>
 {
