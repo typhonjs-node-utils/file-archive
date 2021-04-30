@@ -440,7 +440,7 @@ export default class FileArchive
       }
 
       eventbus.on(`${eventPrepend}utils:file:archive:create`, this.archiveCreate, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:finalize`, this.archiveFinalize, this);
+      eventbus.on(`${eventPrepend}utils:file:archive:async:finalize`, this.archiveFinalize, this);
       eventbus.on(`${eventPrepend}utils:file:archive:copy`, this.copy, this);
       eventbus.on(`${eventPrepend}utils:file:archive:options:get`, this.getOptions, this);
       eventbus.on(`${eventPrepend}utils:file:archive:options:set`, this.setOptions, this);
