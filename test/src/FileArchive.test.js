@@ -12,7 +12,7 @@ fs.emptydirSync('./test/fixture');
 // `emptyRelativePath`.
 //   writeFile({ data, filepath, silent = false, encoding = 'utf8' } = {})
 
-describe('FileUtil:', () =>
+describe('FileArchive:', () =>
 {
    it('writeFile', () =>
    {

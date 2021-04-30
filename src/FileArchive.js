@@ -77,10 +77,10 @@ export default class FileArchive
     */
    archiveCreate({ filepath, addToParent = true, logPrepend = '', silent = false } = {})
    {
-      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a 'string'.`); }
-      if (typeof addToParent !== 'boolean') { throw new TypeError(`'addToParent' is not a 'boolean'.`); }
-      if (typeof logPrepend !== 'string') { throw new TypeError(`'logPrepend' is not a 'string'.`); }
-      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
+      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
+      if (typeof addToParent !== 'boolean') { throw new TypeError(`'addToParent' is not a boolean.`); }
+      if (typeof logPrepend !== 'string') { throw new TypeError(`'logPrepend' is not a string.`); }
+      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a boolean.`); }
 
       const compressFormat = this.#options.compressFormat;
 
@@ -158,7 +158,7 @@ export default class FileArchive
     */
    async archiveFinalize({ logPrepend = '', silent = false } = {})
    {
-      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
+      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a boolean.`); }
 
       const instance = this._popArchive();
 
@@ -244,10 +244,10 @@ export default class FileArchive
     */
    copy({ src, dest, logPrepend = '', silent = false } = {})
    {
-      if (typeof src !== 'string') { throw new TypeError(`'src' is not a 'string'.`); }
-      if (typeof dest !== 'string') { throw new TypeError(`'dest' is not a 'string'.`); }
-      if (typeof logPrepend !== 'string') { throw new TypeError(`'logPrepend' is not a 'string'.`); }
-      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
+      if (typeof src !== 'string') { throw new TypeError(`'src' is not a string.`); }
+      if (typeof dest !== 'string') { throw new TypeError(`'dest' is not a string.`); }
+      if (typeof logPrepend !== 'string') { throw new TypeError(`'logPrepend' is not a string.`); }
+      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a boolean.`); }
 
       if (!silent && this._eventbus)
       {
@@ -355,7 +355,7 @@ export default class FileArchive
     */
    setOptions(options = {})
    {
-      if (typeof options !== 'object') { throw new TypeError(`'options' is not an 'object'.`); }
+      if (typeof options !== 'object') { throw new TypeError(`'options' is not an object.`); }
 
       if (!this.#options.lockRelative && typeof options.relativePath === 'string')
       {
@@ -387,12 +387,12 @@ export default class FileArchive
     */
    writeFile({ data, filepath, logPrepend = '', silent = false, encoding = 'utf8' } = {})
    {
-      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a 'string'.`); }
-      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
-      if (typeof encoding !== 'string') { throw new TypeError(`'encoding' is not a 'string'.`); }
-      if (typeof data === 'undefined' || data === null)
+      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
+      if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a boolean.`); }
+      if (typeof encoding !== 'string') { throw new TypeError(`'encoding' is not a string.`); }
+      if (data === void 0 || data === null)
       {
-         throw new TypeError(`'filepath' is not a 'string'.`);
+         throw new TypeError(`'data' is null or undefined.`);
       }
 
       if (!silent && this._eventbus)
