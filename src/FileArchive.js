@@ -66,34 +66,34 @@ export default class FileArchive
     *
     * @param {object}   opts - Optional parameters.
     *
-    * @param {string}   opts.filePath - Destination file path; the compression format extension will be appended.
+    * @param {string}   opts.filepath - Destination file path; the compression format extension will be appended.
     *
     * @param {boolean}  [opts.addToParent=true] - If a parent archiver exists then add child archive to it and delete
     *                                             local file.
     *
     * @param {string}   [opts.logPrepend=''] - A string to prepend any logged output.
     *
-    * @param {boolean}  [opts.silent=false] - When true `output: <destPath>` is logged.
+    * @param {boolean}  [opts.silent=false] - When true logging is disabled.
     */
-   archiveCreate({ filePath, addToParent = true, logPrepend = '', silent = false } = {})
+   archiveCreate({ filepath, addToParent = true, logPrepend = '', silent = false } = {})
    {
-      if (typeof filePath !== 'string') { throw new TypeError(`'filePath' is not a 'string'.`); }
+      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a 'string'.`); }
       if (typeof addToParent !== 'boolean') { throw new TypeError(`'addToParent' is not a 'boolean'.`); }
       if (typeof logPrepend !== 'string') { throw new TypeError(`'logPrepend' is not a 'string'.`); }
       if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
 
       const compressFormat = this.#options.compressFormat;
 
-      // Add archive format to `filePath`.
-      filePath = `${filePath}.${compressFormat}`;
+      // Add archive format to `filepath`.
+      filepath = `${filepath}.${compressFormat}`;
 
       if (!silent && this._eventbus)
       {
-         this._eventbus.trigger(this.#options.logEvent, `${logPrepend}creating archive: ${filePath}`);
+         this._eventbus.trigger(this.#options.logEvent, `${logPrepend}creating archive: ${filepath}`);
       }
 
-      let resolvedPath = this.#options.relativePath ? path.resolve(this.#options.relativePath, filePath) :
-       path.resolve(filePath);
+      let resolvedPath = this.#options.relativePath ? path.resolve(this.#options.relativePath, filepath) :
+       path.resolve(filepath);
 
       // If a child archive is being created, `addToParent` is false then change the resolved destination to a
       // temporary file so that the parent instance can add it before finalizing.
@@ -135,7 +135,7 @@ export default class FileArchive
       const instance =
       {
          archive,
-         filePath,
+         filepath,
          resolvedPath,
          stream,
          addToParent,
@@ -152,7 +152,7 @@ export default class FileArchive
     *
     * @param {string}   [opts.logPrepend=''] - A string to prepend any logged output.
     *
-    * @param {boolean}  [opts.silent=false] - When true `output: <destPath>` is logged.
+    * @param {boolean}  [opts.silent=false] - When true logging is disabled.
     *
     * @returns {Promise} - A resolved promise is returned which is triggered once archive finalization completes.
     */
@@ -175,7 +175,7 @@ export default class FileArchive
                // Add event callbacks to instance stream such that on close the Promise is resolved.
                instance.stream.on('close', () =>
                {
-                  resolve({ resolvedPath: instance.resolvedPath, filePath: instance.filePath });
+                  resolve({ resolvedPath: instance.resolvedPath, filepath: instance.filepath });
                });
 
                // Any errors will reject the promise.
@@ -185,7 +185,7 @@ export default class FileArchive
 
          if (!silent && this._eventbus)
          {
-            this._eventbus.trigger(this.#options.logEvent, `${logPrepend}finalizing archive: ${instance.filePath}`);
+            this._eventbus.trigger(this.#options.logEvent, `${logPrepend}finalizing archive: ${instance.filepath}`);
          }
 
          // Resolve any child promises before finalizing current instance.
@@ -194,8 +194,8 @@ export default class FileArchive
             // There are temporary child archives to insert into the current instance.
             for (const result of results)
             {
-               // Append temporary archive to requested relative filePath.
-               instance.archive.append(fs.createReadStream(result.resolvedPath), { name: result.filePath });
+               // Append temporary archive to requested relative filepath.
+               instance.archive.append(fs.createReadStream(result.resolvedPath), { name: result.filepath });
 
                // Remove temporary archive.
                fs.removeSync(result.resolvedPath);
@@ -234,43 +234,43 @@ export default class FileArchive
     *
     * @param {object}   opts - Optional parameters.
     *
-    * @param {string}   opts.srcPath - Source path.
+    * @param {string}   opts.src - Source path.
     *
-    * @param {string}   opts.destPath - Destination path.
+    * @param {string}   opts.dest - Destination path.
     *
     * @param {string}   [opts.logPrepend=''] - A string to prepend any logged output.
     *
-    * @param {boolean}  [opts.silent=false] - When true `output: <destPath>` is logged.
+    * @param {boolean}  [opts.silent=false] - When true logging is disabled.
     */
-   copy({ srcPath, destPath, logPrepend = '', silent = false } = {})
+   copy({ src, dest, logPrepend = '', silent = false } = {})
    {
-      if (typeof srcPath !== 'string') { throw new TypeError(`'srcPath' is not a 'string'.`); }
-      if (typeof destPath !== 'string') { throw new TypeError(`'destPath' is not a 'string'.`); }
+      if (typeof src !== 'string') { throw new TypeError(`'src' is not a 'string'.`); }
+      if (typeof dest !== 'string') { throw new TypeError(`'dest' is not a 'string'.`); }
       if (typeof logPrepend !== 'string') { throw new TypeError(`'logPrepend' is not a 'string'.`); }
       if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
 
       if (!silent && this._eventbus)
       {
-         this._eventbus.trigger(this.#options.logEvent, `${logPrepend}copied: ${destPath}`);
+         this._eventbus.trigger(this.#options.logEvent, `${logPrepend}copied: ${dest}`);
       }
 
       const instance = this.#getArchive();
 
       if (instance !== null)
       {
-         if (fs.statSync(srcPath).isDirectory())
+         if (fs.statSync(src).isDirectory())
          {
-            instance.archive.directory(srcPath, destPath);
+            instance.archive.directory(src, dest);
          }
          else
          {
-            instance.archive.file(srcPath, { name: destPath });
+            instance.archive.file(src, { name: dest });
          }
       }
       else
       {
-         fs.copySync(srcPath, this.#options.relativePath ? path.resolve(this.#options.relativePath, destPath) :
-          path.resolve(destPath));
+         fs.copySync(src, this.#options.relativePath ? path.resolve(this.#options.relativePath, dest) :
+          path.resolve(dest));
       }
    }
 
@@ -375,42 +375,42 @@ export default class FileArchive
    /**
     * Write a file to file path or relative path.
     *
-    * @param {object}   fileData - The file data.
+    * @param {*}        data - The data to write.
     *
-    * @param {string}   filePath - A relative file path and name to `config.destination`.
+    * @param {string}   filepath - A relative file path and name to `config.destination`.
     *
     * @param {string}   [logPrepend=''] - A string to prepend any logged output.
     *
-    * @param {boolean}  [silent=false] - When true `output: <destPath>` is logged.
+    * @param {boolean}  [silent=false] - When true `output: <dest>` is logged.
     *
     * @param {string}   [encoding='utf8'] - The encoding type.
     */
-   writeFile({ fileData, filePath, logPrepend = '', silent = false, encoding = 'utf8' } = {})
+   writeFile({ data, filepath, logPrepend = '', silent = false, encoding = 'utf8' } = {})
    {
-      if (typeof filePath !== 'string') { throw new TypeError(`'filePath' is not a 'string'.`); }
+      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a 'string'.`); }
       if (typeof silent !== 'boolean') { throw new TypeError(`'silent' is not a 'boolean'.`); }
       if (typeof encoding !== 'string') { throw new TypeError(`'encoding' is not a 'string'.`); }
-      if (typeof fileData === 'undefined' || fileData === null)
+      if (typeof data === 'undefined' || data === null)
       {
-         throw new TypeError(`'filePath' is not a 'string'.`);
+         throw new TypeError(`'filepath' is not a 'string'.`);
       }
 
       if (!silent && this._eventbus)
       {
-         this._eventbus.trigger(this.#options.logEvent, `${logPrepend}output: ${filePath}`);
+         this._eventbus.trigger(this.#options.logEvent, `${logPrepend}output: ${filepath}`);
       }
 
       const instance = this.#getArchive();
 
       if (instance !== null)
       {
-         instance.archive.append(fileData, { name: filePath });
+         instance.archive.append(data, { name: filepath });
       }
       else
       {
-         // If this.#options.relativePath is defined then resolve the relative path against filePath.
-         fs.outputFileSync(this.#options.relativePath ? path.resolve(this.#options.relativePath, filePath) : filePath,
-          fileData, { encoding });
+         // If this.#options.relativePath is defined then resolve the relative path against filepath.
+         fs.outputFileSync(this.#options.relativePath ? path.resolve(this.#options.relativePath, filepath) : filepath,
+          data, { encoding });
       }
    }
 

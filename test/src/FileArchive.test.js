@@ -10,14 +10,14 @@ fs.emptydirSync('./test/fixture');
 
 // Note: to prevent `./test/fixture` from being emptied at the end of testing comment out the last test
 // `emptyRelativePath`.
-//   writeFile({ fileData, filePath, silent = false, encoding = 'utf8' } = {})
+//   writeFile({ data, filepath, silent = false, encoding = 'utf8' } = {})
 
 describe('FileUtil:', () =>
 {
    it('writeFile', () =>
    {
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test.js' });
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test2.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test2.js' });
 
       assert.isTrue(fs.existsSync('./test/fixture/test.js'));
       assert.isTrue(fs.existsSync('./test/fixture/test2.js'));
@@ -31,7 +31,7 @@ describe('FileUtil:', () =>
 
    it('copy', () =>
    {
-      fileArchive.copy({ srcPath: './test/fixture/test.js', destPath: 'test3.js' });
+      fileArchive.copy({ src: './test/fixture/test.js', dest: 'test3.js' });
 
       assert.isTrue(fs.existsSync('./test/fixture/test3.js'));
 
@@ -42,11 +42,11 @@ describe('FileUtil:', () =>
 
    it('create archive (1)', async () =>
    {
-      fileArchive.archiveCreate({ filePath: 'archive' });
+      fileArchive.archiveCreate({ filepath: 'archive' });
 
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test3.js' });
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test4.js' });
-      fileArchive.copy({ srcPath: './test/fixture/test.js', destPath: 'test.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test3.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test4.js' });
+      fileArchive.copy({ src: './test/fixture/test.js', dest: 'test.js' });
 
       await fileArchive.archiveFinalize();
 
@@ -55,17 +55,17 @@ describe('FileUtil:', () =>
 
    it('create archive (2)', async () =>
    {
-      fileArchive.archiveCreate({ filePath: 'archive2' });
+      fileArchive.archiveCreate({ filepath: 'archive2' });
 
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test3.js' });
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test4.js' });
-      fileArchive.copy({ srcPath: './test/fixture/test.js', destPath: 'test.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test3.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test4.js' });
+      fileArchive.copy({ src: './test/fixture/test.js', dest: 'test.js' });
 
-      fileArchive.archiveCreate({ filePath: 'archive' });
+      fileArchive.archiveCreate({ filepath: 'archive' });
 
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test3.js' });
-      fileArchive.writeFile({ fileData: writeData, filePath: 'test4.js' });
-      fileArchive.copy({ srcPath: './test/fixture/test.js', destPath: 'test.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test3.js' });
+      fileArchive.writeFile({ data: writeData, filepath: 'test4.js' });
+      fileArchive.copy({ src: './test/fixture/test.js', dest: 'test.js' });
 
       await fileArchive.archiveFinalize();
 
