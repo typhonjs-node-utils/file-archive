@@ -1,0 +1,66 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Builds on versions of Node that require --experimental-modules w/ `esm` added for ESM tests in Mocha
+  build-exp:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [12.2.0]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      # Specifically load `esm` separately to run ESM Mocha tests for 12.0.0
+      - name: Install esm
+        run: npm install esm
+
+      # Note: `-- --require esm` only adds `esm` to mocha in the GH Action.
+      - name: Run the tests
+        run: npm run test -- --require esm
+
+  # builds on versions of Node that don't require --experimental-modules nor `esm` to run ESM mocha tests.
+  build-node:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [12.17.0, 12.x, 14.0.0, 14.x, 15.0.0, 15.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm run test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1

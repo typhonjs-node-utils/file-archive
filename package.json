@@ -1,0 +1,44 @@
+{
+  "name": "@typhonjs-utils/file-archive",
+  "description": "Provides a utility for copying / writing files with archiving support.",
+  "version": "0.0.0",
+  "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
+  "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "contributors": [
+    "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
+  ],
+  "dependencies": {
+    "archiver": "^5.0.0",
+    "fs-extra": "^9.0.0"
+  },
+  "devDependencies": {
+    "@typhonjs-utils/build-test": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "/npm-shrinkwrap.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/typhonjs-node-utils/file-archive#readme",
+  "keywords": [
+    "typhonjs",
+    "utils",
+    "file",
+    "archive"
+  ],
+  "license": "MPL-2.0",
+  "bugs": "https://github.com/typhonjs-node-utils/file-archive/issues",
+  "repository": "github:typhonjs-node-utils/file-archive",
+  "scripts": {
+    "eslint": "eslint .",
+    "prepublishOnly": "npm run test",
+    "test": "c8 --reporter=lcov --reporter=text-summary mocha -colors \"test/src/**/*.test.js\""
+  }
+}
