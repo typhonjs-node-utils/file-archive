@@ -1,7 +1,7 @@
 import { assert }       from 'chai';
 import fs               from 'fs-extra';
 
-import { FileArchive }  from '../../src/index.js';
+import FileArchive      from '../../src/FileArchive.js';
 
 const fileArchive = new FileArchive({ relativePath: './test/fixture' });
 
