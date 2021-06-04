@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs-utils/file-archive",
   "description": "Provides a utility for copying / writing files with archiving support.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "main": "src/index.js",
@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "archiver": "^5.0.0",
-    "fs-extra": "^9.0.0"
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
     "@typhonjs-utils/build-test": "^0.1.0"
