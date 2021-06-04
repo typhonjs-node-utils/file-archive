@@ -437,6 +437,8 @@ export default class FileArchive
 
       const options = ev.pluginOptions;
 
+      let guard = true;
+
       // Apply any plugin options.
       if (typeof options === 'object')
       {
@@ -444,14 +446,16 @@ export default class FileArchive
 
          // If `eventPrepend` is defined then it is prepended before all event bindings.
          if (typeof options.eventPrepend === 'string') { eventPrepend = `${options.eventPrepend}:`; }
+
+         if (typeof options.guard === 'boolean') { guard = options.guard; }
       }
 
-      eventbus.on(`${eventPrepend}utils:file:archive:create`, this.archiveCreate, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:async:finalize`, this.archiveFinalize, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:copy`, this.copy, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:options:get`, this.getOptions, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:options:set`, this.setOptions, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:path:relative:empty`, this.emptyRelativePath, this);
-      eventbus.on(`${eventPrepend}utils:file:archive:write`, this.writeFile, this);
+      eventbus.on(`${eventPrepend}utils:file:archive:create`, this.archiveCreate, this, { guard });
+      eventbus.on(`${eventPrepend}utils:file:archive:async:finalize`, this.archiveFinalize, this, { guard });
+      eventbus.on(`${eventPrepend}utils:file:archive:copy`, this.copy, this, { guard });
+      eventbus.on(`${eventPrepend}utils:file:archive:options:get`, this.getOptions, this, { guard });
+      eventbus.on(`${eventPrepend}utils:file:archive:options:set`, this.setOptions, this, { guard });
+      eventbus.on(`${eventPrepend}utils:file:archive:path:relative:empty`, this.emptyRelativePath, this, { guard });
+      eventbus.on(`${eventPrepend}utils:file:archive:write`, this.writeFile, this, { guard });
    }
 }
